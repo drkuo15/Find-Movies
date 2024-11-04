@@ -8,7 +8,6 @@ const styles = stylex.create({
     maxWidth: '700px',
     height: '48px',
     position: 'relative',
-    marginBottom: spacing.lg,
   },
   searchInput: {
     height: '48px',

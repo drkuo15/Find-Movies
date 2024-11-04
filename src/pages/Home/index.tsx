@@ -3,11 +3,9 @@ import useSWRInfinite from 'swr/infinite';
 import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { spacing, fontSize, colors, radius } from '../../styles/tokens.stylex';
-import Search from '../../components/search';
+import placeholderPoster from '../../assets/placeholder-poster.svg';
 import { fetcher, getKey } from '../../services/movie';
 import type { MovieResponse } from '../../types/movie';
-import placeholderPoster from '../../assets/placeholder-poster.svg';
-
 const styles = stylex.create({
   container: {
     display: 'flex',
@@ -16,7 +14,6 @@ const styles = stylex.create({
     width: '100%',
     maxWidth: '1200px',
     margin: '0 auto',
-    padding: `${spacing.lg} ${spacing.base}`,
   },
   movieGrid: {
     display: 'grid',
@@ -92,6 +89,7 @@ const styles = stylex.create({
   loadingMessage: {
     textAlign: 'center',
     padding: spacing.lg,
+    color: colors.white,
   },
   noResults: {
     textAlign: 'center',
@@ -101,7 +99,7 @@ const styles = stylex.create({
 });
 
 export default function Home() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
   const loader = useRef<HTMLDivElement>(null);
 
@@ -145,22 +143,8 @@ export default function Home() {
     return () => observer.disconnect();
   }, [isReachingEnd, isLoadingMore, isValidating, setSize]);
 
-  const handleSearch = (value: string) => {
-    const sanitizedValue = value.trim();
-    setSearchParams(sanitizedValue ? { q: sanitizedValue } : {});
-    setSize(1); // Reset to first page when searching
-  };
-
   return (
     <div {...stylex.props(styles.container)}>
-      <Search
-        placeholder="Search for a movie..."
-        value={searchQuery}
-        onChange={(e) => {
-          handleSearch(e.target.value);
-        }}
-      />
-
       {/* Error State */}
       {error && (
         <div {...stylex.props(styles.errorMessage)}>
