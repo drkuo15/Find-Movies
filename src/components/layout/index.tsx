@@ -1,5 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
 import { spacing } from '../../styles/tokens.stylex';
+
 const styles = stylex.create({
   layout: {
     minHeight: '100vh',
