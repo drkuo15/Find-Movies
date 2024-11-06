@@ -2,6 +2,7 @@ import { MovieReview } from '../../types/movie';
 import * as stylex from '@stylexjs/stylex';
 import { colors, radius, spacing, fontSize } from '../../styles/tokens.stylex';
 import Message from '../message';
+import placeholderPoster from '../../assets/placeholder-poster.svg';
 const styles = stylex.create({
   sectionTitle: {
     fontSize: fontSize.xl,
@@ -37,6 +38,8 @@ const styles = stylex.create({
   reviewAvatar: {
     width: '40px',
     height: '40px',
+    borderRadius: radius.full,
+    backgroundColor: colors.gray200,
     '@media (min-width: 768px)': {
       width: '48px',
       height: '48px',
@@ -148,16 +151,24 @@ function ReviewCard({ review }: ReviewCardProps) {
   return (
     <div {...stylex.props(styles.reviewCard)}>
       <div {...stylex.props(styles.reviewHeader)}>
-        <img
-          src={
-            review.author_details.avatar_path
-              ? `https://image.tmdb.org/t/p/w45${review.author_details.avatar_path}`
-              : '/default-avatar.png'
-          }
-          alt={review.author}
-          {...stylex.props(styles.reviewAvatar)}
-          loading="lazy"
-        />
+        {review.author_details.avatar_path ? (
+          <img
+            src={
+              review.author_details.avatar_path
+                ? `https://image.tmdb.org/t/p/w45${review.author_details.avatar_path}`
+                : '/default-avatar.png'
+            }
+            alt={review.author}
+            {...stylex.props(styles.reviewAvatar)}
+            loading="lazy"
+          />
+        ) : (
+          <img
+            src={placeholderPoster}
+            alt="No avatar available"
+            {...stylex.props(styles.reviewAvatar)}
+          />
+        )}
         <div {...stylex.props(styles.reviewAuthorInfo)}>
           <p {...stylex.props(styles.reviewAuthorName)}>{review.author}</p>
           <div {...stylex.props(styles.reviewMeta)}>
