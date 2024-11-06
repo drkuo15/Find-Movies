@@ -1,5 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
 import { spacing } from '../../styles/tokens.stylex';
+import Header from '../header';
 
 const styles = stylex.create({
   layout: {
@@ -7,13 +8,13 @@ const styles = stylex.create({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    padding: `0 ${spacing.base}`,
   },
   main: {
     flex: 1,
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
+    padding: `${spacing.lg} ${spacing.base}`,
   },
 });
 
@@ -24,6 +25,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   return (
     <div {...stylex.props(styles.layout)}>
+      <Header />
       <main {...stylex.props(styles.main)}>{children}</main>
     </div>
   );

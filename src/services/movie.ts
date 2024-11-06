@@ -1,27 +1,68 @@
-import { MovieResponse } from '../types/movie';
+import type { MovieListResponse } from '../types/movie';
 
-export async function fetcher(url: string): Promise<MovieResponse> {
+export const TMDB_API_URL = 'https://api.themoviedb.org/3';
+
+export async function fetcher<T>(url: string): Promise<T> {
   const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_ACCESS_TOKEN}`,
       accept: 'application/json',
     },
   });
+
+  if (!response.ok) {
+    throw new Error(`API request failed: ${response.statusText}`);
+  }
+
   return response.json();
 }
 
-export function getKey(
-  pageIndex: number,
-  previousPageData: MovieResponse | null,
-  searchQuery: string,
-) {
-  if (previousPageData && !previousPageData.results.length) return null;
+interface PaginationParams {
+  endpoint: string;
+  pageParam: number;
+  queryParams?: Record<string, string>;
+}
 
-  if (pageIndex === 0) {
-    return searchQuery
-      ? `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(searchQuery)}&page=1`
-      : null;
+export function generatePaginationKey({
+  endpoint,
+  pageParam,
+  queryParams,
+}: PaginationParams): string {
+  const baseUrl = `${TMDB_API_URL}${endpoint}`;
+  const searchParams = new URLSearchParams({ page: String(pageParam) });
+
+  if (queryParams) {
+    Object.entries(queryParams).forEach(([key, value]) => {
+      searchParams.append(key, value);
+    });
   }
 
-  return `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(searchQuery)}&page=${pageIndex + 1}`;
+  return `${baseUrl}?${searchParams.toString()}`;
+}
+
+export function getMovieSearchKey(
+  pageIndex: number,
+  previousPageData: MovieListResponse | null,
+  searchQuery: string,
+) {
+  if (!searchQuery || (previousPageData && !previousPageData.results.length)) {
+    return null;
+  }
+
+  return generatePaginationKey({
+    endpoint: '/search/movie',
+    pageParam: pageIndex + 1,
+    queryParams: { query: searchQuery },
+  });
+}
+
+export function getMovieReviewsKey(movieId: string, pageIndex: number) {
+  return generatePaginationKey({
+    endpoint: `/movie/${movieId}/reviews`,
+    pageParam: pageIndex + 1,
+  });
+}
+
+export function getMovieDetailsAndCreditsUrl(movieId: string) {
+  return `${TMDB_API_URL}/movie/${movieId}?append_to_response=credits`;
 }
