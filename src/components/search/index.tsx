@@ -20,7 +20,7 @@ const styles = stylex.create({
     outline: 'none',
     color: colors.black,
     '::placeholder': {
-      color: colors.gray,
+      color: colors.gray400,
     },
   },
   searchIcon: {

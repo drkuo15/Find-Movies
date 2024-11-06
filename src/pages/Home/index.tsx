@@ -1,11 +1,13 @@
 import * as stylex from '@stylexjs/stylex';
 import useSWRInfinite from 'swr/infinite';
 import { useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { spacing, fontSize, colors, radius } from '../../styles/tokens.stylex';
 import placeholderPoster from '../../assets/placeholder-poster.svg';
-import { fetcher, getKey } from '../../services/movie';
-import type { MovieResponse } from '../../types/movie';
+import { fetcher, getMovieSearchKey } from '../../services/movie';
+import type { MovieListResponse } from '../../types/movie';
+import Message from '../../components/message';
+
 const styles = stylex.create({
   container: {
     display: 'flex',
@@ -24,7 +26,7 @@ const styles = stylex.create({
     },
     gap: {
       default: spacing.lg,
-      '@media (max-width: ${breakpoint.md}px)': spacing.base,
+      '@media (max-width: 768px)': spacing.base,
       '@media (max-width: 480px)': spacing.sm,
     },
     width: '100%',
@@ -35,8 +37,10 @@ const styles = stylex.create({
     backgroundColor: colors.white,
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
     transition: 'transform 0.2s ease-in-out',
+    color: 'inherit',
     ':hover': {
       transform: 'scale(1.02)',
+      color: 'inherit',
     },
   },
   moviePoster: {
@@ -44,7 +48,7 @@ const styles = stylex.create({
     height: 'auto',
     aspectRatio: '2/3',
     objectFit: 'cover',
-    backgroundColor: colors.lightGray,
+    backgroundColor: colors.gray200,
   },
   placeholderContainer: {
     width: '100%',
@@ -52,8 +56,8 @@ const styles = stylex.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.lightGray,
-    color: colors.gray,
+    backgroundColor: colors.gray200,
+    color: colors.gray400,
   },
   placeholderIcon: {
     width: '40%',
@@ -79,22 +83,7 @@ const styles = stylex.create({
       default: fontSize.sm,
       '@media (max-width: 768px)': fontSize.xs,
     },
-    color: colors.gray,
-  },
-  errorMessage: {
-    color: 'red',
-    textAlign: 'center',
-    padding: spacing.lg,
-  },
-  loadingMessage: {
-    textAlign: 'center',
-    padding: spacing.lg,
-    color: colors.white,
-  },
-  noResults: {
-    textAlign: 'center',
-    padding: spacing.lg,
-    color: colors.gray,
+    color: colors.gray400,
   },
 });
 
@@ -104,9 +93,9 @@ export default function Home() {
   const loader = useRef<HTMLDivElement>(null);
 
   const { data, error, isLoading, size, setSize, isValidating } =
-    useSWRInfinite<MovieResponse>(
+    useSWRInfinite<MovieListResponse>(
       (pageIndex, previousPageData) =>
-        getKey(pageIndex, previousPageData, searchQuery),
+        getMovieSearchKey(pageIndex, previousPageData, searchQuery),
       fetcher,
     );
 
@@ -147,16 +136,20 @@ export default function Home() {
     <div {...stylex.props(styles.container)}>
       {/* Error State */}
       {error && (
-        <div {...stylex.props(styles.errorMessage)}>
+        <Message variant="error">
           Error loading movies. Please try again.
-        </div>
+        </Message>
       )}
 
       {/* Results */}
       {movies.length > 0 && (
         <div {...stylex.props(styles.movieGrid)}>
           {movies.map((movie) => (
-            <div key={movie.id} {...stylex.props(styles.movieCard)}>
+            <Link
+              key={movie.id}
+              to={`/movie/${movie.id}`}
+              {...stylex.props(styles.movieCard)}
+            >
               {movie.poster_path ? (
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -177,21 +170,19 @@ export default function Home() {
                 <h3 {...stylex.props(styles.movieTitle)}>{movie.title}</h3>
                 <p {...stylex.props(styles.movieDate)}>{movie.release_date}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
 
       {/* Loading More Indicator */}
-      <div ref={loader} {...stylex.props(styles.loadingMessage)}>
-        {isLoadingMore ? 'Loading more...' : ''}
+      <div ref={loader}>
+        {isLoadingMore && <Message variant="loading">Loading more...</Message>}
       </div>
 
       {/* No Results */}
       {isEmpty && searchQuery && (
-        <div {...stylex.props(styles.noResults)}>
-          No movies found for "{searchQuery}"
-        </div>
+        <Message variant="info">No movies found for "{searchQuery}"</Message>
       )}
     </div>
   );
