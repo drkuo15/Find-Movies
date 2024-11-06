@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout';
-import Home from './pages/tmp';
+import Home from './pages/home';
 import Movie from './pages/movieDetails';
 
 function App() {
