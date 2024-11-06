@@ -45,6 +45,7 @@ const styles = stylex.create({
   metaInfo: {
     display: 'flex',
     flexWrap: 'wrap',
+    alignItems: 'center',
     gap: spacing.md,
     color: colors.gray400,
     fontSize: fontSize.sm,
