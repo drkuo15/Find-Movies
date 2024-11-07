@@ -7,7 +7,7 @@ const styles = stylex.create({
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    padding: `${spacing.lg} ${spacing.base}`,
+    padding: `${spacing.lg}`,
   },
   searchWrapper: {
     width: '100%',
