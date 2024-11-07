@@ -4,7 +4,7 @@ import {
   fetcher,
   getMovieDetailsKey,
   getMovieReviewsKey,
-} from '../services/movie';
+} from '../services/tmdb';
 import type {
   MovieDetailAndCreditResponse,
   MovieReviewsResponse,

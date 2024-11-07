@@ -28,6 +28,5 @@ interface MessageProps {
 }
 
 export default function Message({ variant = 'info', children }: MessageProps) {
-  console.log('children', children);
   return <div {...stylex.props(styles.base, styles[variant])}>{children}</div>;
 }
