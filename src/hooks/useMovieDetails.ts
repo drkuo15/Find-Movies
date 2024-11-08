@@ -28,7 +28,7 @@ export function useMovieDetails(movieId: string): UseMovieDetailsReturn {
     error: movieError,
     isLoading: isMovieLoading,
   } = useSWR<MovieDetailAndCreditResponse>(
-    getMovieDetailsKey(movieId, ['credits']),
+    getMovieDetailsKey(Number(movieId), ['credits']),
     fetcher,
   );
 

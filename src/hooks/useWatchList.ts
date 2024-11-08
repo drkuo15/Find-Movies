@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { fetchWatchList } from '../services/firebase';
+import { fetchWatchList, removeFromWatchList } from '../services/firebase';
 import { fetcher, getMovieDetailsKey } from '../services/tmdb';
 import type { MovieDetailResponse, WatchListMovie } from '../types/movie';
 
@@ -14,6 +14,7 @@ export function useWatchList({ userId }: UseWatchListOptions) {
     data: watchListData,
     isLoading: isWatchListLoading,
     error: watchListError,
+    mutate,
   } = useSWR(CACHE_KEY, () => fetchWatchList(userId));
 
   // Fetch movie details for each movie in watch list
@@ -43,9 +44,25 @@ export function useWatchList({ userId }: UseWatchListOptions) {
     },
   );
 
+  const removeMovie = async (movieId: number) => {
+    await removeFromWatchList(userId, movieId);
+
+    mutate(
+      (currentData) => {
+        if (!currentData) return { userId, watchList: [] };
+        return {
+          ...currentData,
+          watchList: currentData.watchList.filter((m) => m.movieId !== movieId),
+        };
+      },
+      false, //  don't revalidate with server
+    );
+  };
+
   return {
     moviesToWatch: movieData,
     isLoading: isWatchListLoading || isMoviesLoading,
     isError: Boolean(watchListError || moviesError),
+    removeMovie,
   };
 }

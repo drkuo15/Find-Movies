@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 
 export interface MovieToWatch {
-  movieId: string;
+  movieId: number;
   addedAt: Timestamp;
 }
 

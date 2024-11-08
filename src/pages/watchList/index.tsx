@@ -4,6 +4,7 @@ import * as stylex from '@stylexjs/stylex';
 import { colors, spacing, fontSize, radius } from '../../styles/tokens.stylex';
 import placeholderPoster from '../../assets/placeholder-poster.svg';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface SortOrder {
   direction: 'asc' | 'desc';
@@ -114,8 +115,10 @@ const styles = stylex.create({
 export default function WatchList() {
   const userId = 'L76cAu6NoZG0yWuDX9CJ';
   const [sortOrder, setSortOrder] = useState<SortOrder>({ direction: 'desc' });
-
-  const { moviesToWatch, isLoading, isError } = useWatchList({ userId });
+  const { moviesToWatch, isLoading, isError, removeMovie } = useWatchList({
+    userId,
+  });
+  const [isRemoving, setIsRemoving] = useState<Record<number, boolean>>({});
 
   if (isError) {
     return <Message variant="error">Failed to load watch list</Message>;
@@ -135,6 +138,19 @@ export default function WatchList() {
     setSortOrder((prev) => ({
       direction: prev.direction === 'desc' ? 'asc' : 'desc',
     }));
+  };
+
+  const handleRemove = async (movieId: number) => {
+    setIsRemoving((prev) => ({ ...prev, [movieId]: true }));
+    try {
+      await removeMovie(movieId);
+      toast.success('Movie removed from watchlist');
+    } catch (error) {
+      console.error('Failed to remove movie:', error);
+      toast.error('Failed to remove movie');
+    } finally {
+      setIsRemoving((prev) => ({ ...prev, [movieId]: false }));
+    }
   };
 
   return (
@@ -181,7 +197,13 @@ export default function WatchList() {
             </span>
             <p {...stylex.props(styles.movieOverview)}>{movie.overview}</p>
             <div {...stylex.props(styles.actions)}>
-              <button {...stylex.props(styles.actionButton)}>✕ Remove</button>
+              <button
+                {...stylex.props(styles.actionButton)}
+                onClick={() => handleRemove(movie.id)}
+                disabled={isRemoving[movie.id]}
+              >
+                {isRemoving[movie.id] ? 'Removing...' : '✕ Remove'}
+              </button>
             </div>
           </div>
         </div>
