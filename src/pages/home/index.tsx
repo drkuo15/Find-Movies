@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { spacing, fontSize, colors, radius } from '../../styles/tokens.stylex';
 import placeholderPoster from '../../assets/placeholder-poster.svg';
-import { fetcher, getMovieSearchKey } from '../../services/movie';
+import { fetcher, getMovieSearchKey } from '../../services/tmdb';
 import type { MovieListResponse } from '../../types/movie';
 import Message from '../../components/message';
 

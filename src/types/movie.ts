@@ -1,3 +1,5 @@
+import type { Timestamp } from 'firebase/firestore';
+
 export interface MovieListItem {
   id: number;
   title: string;
@@ -13,7 +15,8 @@ export interface MovieListResponse {
   page: number;
 }
 
-export interface MovieDetailAndCreditResponse {
+export interface MovieDetailResponse {
+  id: number;
   genres: Array<{
     id: number;
     name: string;
@@ -25,6 +28,9 @@ export interface MovieDetailAndCreditResponse {
   tagline: string | null;
   title: string;
   vote_average: number;
+}
+
+export interface MovieDetailAndCreditResponse extends MovieDetailResponse {
   credits: {
     cast: Array<{
       id: number;
@@ -59,4 +65,8 @@ export interface MovieReviewsResponse {
   results: MovieReview[];
   total_pages: number;
   total_results: number;
+}
+
+export interface WatchListMovie extends MovieDetailResponse {
+  addedAt: Timestamp;
 }

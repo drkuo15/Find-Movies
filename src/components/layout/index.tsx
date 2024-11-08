@@ -14,7 +14,7 @@ const styles = stylex.create({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    padding: `${spacing.lg} ${spacing.base}`,
+    padding: `${spacing.lg}`,
   },
 });
 

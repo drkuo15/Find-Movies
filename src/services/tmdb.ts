@@ -63,6 +63,12 @@ export function getMovieReviewsKey(movieId: string, pageIndex: number) {
   });
 }
 
-export function getMovieDetailsAndCreditsUrl(movieId: string) {
-  return `${TMDB_API_URL}/movie/${movieId}?append_to_response=credits`;
+export function getMovieDetailsKey(
+  movieId: number,
+  appendToResponse?: string[],
+) {
+  const appendToResponseParam = appendToResponse?.length
+    ? `?append_to_response=${appendToResponse.join(',')}`
+    : '';
+  return `${TMDB_API_URL}/movie/${movieId}${appendToResponseParam}`;
 }
