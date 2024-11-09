@@ -3,6 +3,8 @@ import {
   doc,
   getDoc,
   updateDoc,
+  serverTimestamp,
+  setDoc,
   deleteField,
 } from 'firebase/firestore';
 import { db } from '../utils/firebaseInit';
@@ -42,5 +44,31 @@ export async function removeFromWatchList(userId: string, movieId: number) {
 
   await updateDoc(userRef, {
     [`watchList.${movieId}`]: deleteField(),
+  });
+}
+
+export async function addToWatchList(userId: string, movieId: number) {
+  if (!userId) throw new Error('User ID is required');
+  if (!movieId) throw new Error('Movie ID is required');
+
+  const userRef = doc(collection(db, 'users'), userId);
+  const userDoc = await getDoc(userRef);
+
+  if (!userDoc.exists()) {
+    await setDoc(userRef, {
+      userId,
+      watchList: {
+        [movieId]: {
+          addedAt: serverTimestamp(),
+        },
+      },
+    });
+    return;
+  }
+
+  await updateDoc(userRef, {
+    [`watchList.${movieId}`]: {
+      addedAt: serverTimestamp(),
+    },
   });
 }
