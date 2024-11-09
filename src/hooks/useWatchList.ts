@@ -3,11 +3,7 @@ import { fetchWatchList, removeFromWatchList } from '../services/firebase';
 import { fetcher, getMovieDetailsKey } from '../services/tmdb';
 import type { MovieDetailResponse, WatchListMovie } from '../types/movie';
 
-interface UseWatchListOptions {
-  userId: string;
-}
-
-export function useWatchList({ userId }: UseWatchListOptions) {
+export function useWatchList(userId: string) {
   // Fetch watch list movieIDs from Firebase
   const CACHE_KEY = userId ? `watchList-${userId}` : null;
   const {
@@ -23,22 +19,19 @@ export function useWatchList({ userId }: UseWatchListOptions) {
     isLoading: isMoviesLoading,
     error: moviesError,
   } = useSWR(
-    watchListData?.watchList
-      ? watchListData.watchList.map((movie) =>
-          getMovieDetailsKey(movie.movieId),
-        )
+    watchListData
+      ? Object.keys(watchListData).map((movieId) => getMovieDetailsKey(movieId))
       : null,
     async (urls) => {
       const movies = await Promise.all(
         urls.map((url) => fetcher<MovieDetailResponse>(url)),
       );
-
       // Combine movie details with watch list timestamps
       return movies.map(
-        (movie, index) =>
+        (movie) =>
           ({
             ...movie,
-            addedAt: watchListData?.watchList[index].addedAt,
+            addedAt: watchListData?.[movie.id].addedAt,
           }) as WatchListMovie,
       );
     },
@@ -47,13 +40,13 @@ export function useWatchList({ userId }: UseWatchListOptions) {
   const removeMovie = async (movieId: number) => {
     await removeFromWatchList(userId, movieId);
 
+    // Update the cache to remove the movie
     mutate(
       (currentData) => {
-        if (!currentData) return { userId, watchList: [] };
-        return {
-          ...currentData,
-          watchList: currentData.watchList.filter((m) => m.movieId !== movieId),
-        };
+        if (!currentData) return {};
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { [movieId]: _, ...rest } = currentData;
+        return rest;
       },
       false, //  don't revalidate with server
     );

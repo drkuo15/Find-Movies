@@ -1,11 +1,14 @@
 import { Timestamp } from 'firebase/firestore';
 
-export interface MovieToWatch {
-  movieId: number;
+interface MovieTimestamp {
   addedAt: Timestamp;
+}
+
+export interface MovieToWatchMap {
+  [movieId: number]: MovieTimestamp;
 }
 
 export interface User {
   userId: string;
-  watchList: MovieToWatch[];
+  watchList: MovieToWatchMap;
 }

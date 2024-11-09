@@ -64,7 +64,7 @@ export function getMovieReviewsKey(movieId: string, pageIndex: number) {
 }
 
 export function getMovieDetailsKey(
-  movieId: number,
+  movieId: string,
   appendToResponse?: string[],
 ) {
   const appendToResponseParam = appendToResponse?.length

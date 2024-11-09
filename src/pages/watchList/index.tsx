@@ -125,9 +125,8 @@ const styles = stylex.create({
 export default function WatchList() {
   const userId = 'L76cAu6NoZG0yWuDX9CJ';
   const [sortOrder, setSortOrder] = useState<SortOrder>({ direction: 'desc' });
-  const { moviesToWatch, isLoading, isError, removeMovie } = useWatchList({
-    userId,
-  });
+  const { moviesToWatch, isLoading, isError, removeMovie } =
+    useWatchList(userId);
   const [isRemoving, setIsRemoving] = useState<Record<number, boolean>>({});
 
   if (isError) {
