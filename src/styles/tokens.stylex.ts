@@ -32,11 +32,12 @@ export const colors = stylex.defineVars({
   gray600: '#4b5563',
   gray700: '#374151',
   gray800: '#1f2937',
+  gray800Alpha: 'rgba(31, 41, 55, 0.75)',
   gray900: '#111827',
 
   // Theme colors
   primary: '#3b82f6',
-  secondary: '#6b7280',
+  secondary: '#F4C518',
   error: '#ef4444',
 });
 

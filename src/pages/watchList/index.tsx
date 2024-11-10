@@ -5,6 +5,7 @@ import { colors, spacing, fontSize, radius } from '../../styles/tokens.stylex';
 import placeholderPoster from '../../assets/placeholder-poster.svg';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
 
 interface SortOrder {
   direction: 'asc' | 'desc';
@@ -49,6 +50,7 @@ const styles = stylex.create({
     backgroundColor: colors.gray800,
     borderRadius: radius.md,
     overflow: 'hidden',
+    height: '200px',
   },
   poster: {
     width: '120px',
@@ -65,6 +67,11 @@ const styles = stylex.create({
   movieTitle: {
     fontSize: fontSize.xl,
     fontWeight: '500',
+    color: colors.white,
+    cursor: 'pointer',
+    ':hover': {
+      color: colors.gray200,
+    },
   },
   movieDate: {
     color: colors.gray400,
@@ -110,14 +117,16 @@ const styles = stylex.create({
     height: '40%',
     opacity: 0.5,
   },
+  posterLink: {
+    cursor: 'pointer',
+  },
 });
 
 export default function WatchList() {
   const userId = 'L76cAu6NoZG0yWuDX9CJ';
   const [sortOrder, setSortOrder] = useState<SortOrder>({ direction: 'desc' });
-  const { moviesToWatch, isLoading, isError, removeMovie } = useWatchList({
-    userId,
-  });
+  const { moviesToWatch, isLoading, isError, removeMovie } =
+    useWatchList(userId);
   const [isRemoving, setIsRemoving] = useState<Record<number, boolean>>({});
 
   if (isError) {
@@ -175,23 +184,27 @@ export default function WatchList() {
 
       {sortedMovies?.map((movie) => (
         <div key={movie.id} {...stylex.props(styles.movieCard)}>
-          {movie.poster_path ? (
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={movie.title}
-              {...stylex.props(styles.poster)}
-            />
-          ) : (
-            <div {...stylex.props(styles.placeholderContainer)}>
+          <Link to={`/movie/${movie.id}`} {...stylex.props(styles.posterLink)}>
+            {movie.poster_path ? (
               <img
-                src={placeholderPoster}
-                alt="No poster available"
-                {...stylex.props(styles.placeholderIcon)}
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+                {...stylex.props(styles.poster)}
               />
-            </div>
-          )}
+            ) : (
+              <div {...stylex.props(styles.placeholderContainer)}>
+                <img
+                  src={placeholderPoster}
+                  alt="No poster available"
+                  {...stylex.props(styles.placeholderIcon)}
+                />
+              </div>
+            )}
+          </Link>
           <div {...stylex.props(styles.movieInfo)}>
-            <h2 {...stylex.props(styles.movieTitle)}>{movie.title}</h2>
+            <Link to={`/movie/${movie.id}`}>
+              <h2 {...stylex.props(styles.movieTitle)}>{movie.title}</h2>
+            </Link>
             <span {...stylex.props(styles.movieDate)}>
               {movie.release_date}
             </span>
