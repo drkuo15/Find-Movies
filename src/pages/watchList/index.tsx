@@ -5,6 +5,7 @@ import { colors, spacing, fontSize, radius } from '../../styles/tokens.stylex';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import MovieCard from '../../components/movieCard';
+import MovieLottery from '../../components/movieLottery';
 interface SortOrder {
   direction: 'asc' | 'desc';
 }
@@ -22,7 +23,6 @@ const styles = stylex.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     gap: spacing.md,
-    marginBottom: spacing.xl,
   },
   title: {
     fontSize: fontSize['2xl'],
@@ -97,6 +97,7 @@ export default function WatchList() {
 
   return (
     <div {...stylex.props(styles.watchList)}>
+      <MovieLottery movies={sortedMovies ?? []} />
       <div {...stylex.props(styles.header)}>
         <h1 {...stylex.props(styles.title)}>
           My Watchlist&nbsp;
