@@ -3,9 +3,10 @@ import type { MovieDetailAndCreditResponse } from '../../types/movie';
 import { colors, spacing, fontSize, radius } from '../../styles/tokens.stylex';
 import PlusIcon from '../../assets/icons/plus.svg';
 import CheckIcon from '../../assets/icons/check.svg';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { toast } from 'sonner';
-import { addToWatchList } from '../../services/firebase';
+import { AuthContext } from '../../contexts/AuthContext';
+import { useWatchList } from '../../hooks/useWatchList';
 
 interface MovieHeaderProps {
   movie: MovieDetailAndCreditResponse;
@@ -121,7 +122,7 @@ const styles = stylex.create({
     border: '2px solid transparent',
     borderTopColor: colors.white,
     borderRightColor: colors.white,
-    borderRadius: '50%',
+    borderRadius: radius.full,
     animation: `${spin} 0.8s linear infinite`,
   },
   loadingState: {
@@ -138,15 +139,24 @@ export function MovieHeader({ movie }: MovieHeaderProps) {
   const director = movie.credits.crew.find(
     (person) => person.job === 'Director',
   );
-  const userId = 'L76cAu6NoZG0yWuDX9CJ';
+
+  const userInfo = useContext(AuthContext);
+  const userId = userInfo?.user?.uid ?? '';
+
+  const { userWatchList, addMovie } = useWatchList(userId);
+  const isMovieInWatchList = !!userWatchList && movie.id in userWatchList;
+
   const [isAdding, setIsAdding] = useState(false);
-  const [isAdded, setIsAdded] = useState(false);
+  const isAdded = isMovieInWatchList;
 
   const handleAddToWatchList = async () => {
+    if (!userId) {
+      toast('Please sign in to add movies to your watch list');
+      return;
+    }
     setIsAdding(true);
     try {
-      await addToWatchList(userId, movie.id);
-      setIsAdded(true);
+      await addMovie(movie.id);
       toast.success('Added to watch list');
     } catch (error) {
       console.error('Failed to add movie:', error);

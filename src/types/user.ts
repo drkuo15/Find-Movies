@@ -12,3 +12,10 @@ export interface User {
   userId: string;
   watchList: MovieToWatchMap;
 }
+
+export interface GoogleUserInfo {
+  uid: string;
+  photoURL: string;
+  displayName: string;
+  email: string;
+}
