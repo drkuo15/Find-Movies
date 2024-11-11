@@ -1,5 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
-import { useContext, useState } from 'react';
+import { useContext, useRef, useEffect, useState } from 'react';
 import {
   colors,
   radius,
@@ -9,7 +9,8 @@ import {
 import { signIn, signOut } from '../../../services/firebase/auth';
 import { toast } from 'sonner';
 import { AuthContext } from '../../../contexts/AuthContext';
-import defaultAvatar from '../../assets/default-avatar.svg';
+import defaultAvatar from '../../../assets/default-avatar.svg';
+import { useNavigate } from 'react-router-dom';
 
 const styles = stylex.create({
   button: {
@@ -54,10 +55,11 @@ const styles = stylex.create({
     zIndex: 1,
   },
   dropdownItem: {
-    padding: `${spacing.xs} ${spacing.base}`,
+    padding: `${spacing.md} ${spacing.base}`,
     cursor: 'pointer',
     width: '100%',
     textAlign: 'left',
+    fontSize: fontSize.sm,
     border: 'none',
     backgroundColor: 'transparent',
     ':hover': {
@@ -72,7 +74,26 @@ const styles = stylex.create({
 export default function LoginButton() {
   const userInfo = useContext(AuthContext);
   const user = userInfo?.user;
+  const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    if (isDropdownOpen)
+      document.addEventListener('mousedown', handleClickOutside);
+
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isDropdownOpen]);
 
   const handleSignIn = async () => {
     try {
@@ -122,7 +143,17 @@ export default function LoginButton() {
       </button>
 
       {isDropdownOpen && (
-        <div {...stylex.props(styles.dropdown)}>
+        <div ref={dropdownRef} {...stylex.props(styles.dropdown)}>
+          <button
+            {...stylex.props(styles.dropdownItem)}
+            onClick={() => {
+              navigate('/watchlist');
+              setIsDropdownOpen(false);
+            }}
+            type="button"
+          >
+            My Watchlist
+          </button>
           <button
             {...stylex.props(styles.dropdownItem)}
             onClick={() => {

@@ -2,10 +2,11 @@ import Message from '../../components/message';
 import { useWatchList } from '../../hooks/useWatchList';
 import * as stylex from '@stylexjs/stylex';
 import { colors, spacing, fontSize, radius } from '../../styles/tokens.stylex';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { toast } from 'sonner';
 import MovieCard from '../../components/movieCard';
 import MovieLottery from '../../components/movieLottery';
+import { AuthContext } from '../../contexts/AuthContext';
 interface SortOrder {
   direction: 'asc' | 'desc';
 }
@@ -56,11 +57,18 @@ const styles = stylex.create({
 });
 
 export default function WatchList() {
-  const userId = 'L76cAu6NoZG0yWuDX9CJ';
+  const userInfo = useContext(AuthContext);
+  const userId = userInfo?.user?.uid ?? '';
   const [sortOrder, setSortOrder] = useState<SortOrder>({ direction: 'desc' });
   const { moviesToWatch, isLoading, isError, removeMovie } =
     useWatchList(userId);
   const [isRemoving, setIsRemoving] = useState<Record<number, boolean>>({});
+
+  if (!userId) {
+    return (
+      <Message variant="info">Please sign in to view your watch list</Message>
+    );
+  }
 
   if (isError) {
     return <Message variant="error">Failed to load watch list</Message>;

@@ -2,6 +2,7 @@ import useSWR from 'swr';
 import {
   fetchWatchList,
   removeFromWatchList,
+  addToWatchList,
 } from '../services/firebase/firestore';
 import { fetcher, getMovieDetailsKey } from '../services/tmdb';
 import type { MovieDetailResponse, WatchListMovie } from '../types/movie';
@@ -42,17 +43,12 @@ export function useWatchList(userId: string) {
 
   const removeMovie = async (movieId: number) => {
     await removeFromWatchList(userId, movieId);
+    mutate();
+  };
 
-    // Update the cache to remove the movie
-    mutate(
-      (currentData) => {
-        if (!currentData) return {};
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { [movieId]: _, ...rest } = currentData;
-        return rest;
-      },
-      false, //  don't revalidate with server
-    );
+  const addMovie = async (movieId: number) => {
+    await addToWatchList(userId, movieId);
+    mutate();
   };
 
   return {
@@ -60,5 +56,7 @@ export function useWatchList(userId: string) {
     isLoading: isWatchListLoading || isMoviesLoading,
     isError: Boolean(watchListError || moviesError),
     removeMovie,
+    addMovie,
+    userWatchList: watchListData,
   };
 }
