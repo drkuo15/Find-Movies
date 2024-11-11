@@ -5,7 +5,7 @@ import PlusIcon from '../../assets/icons/plus.svg';
 import CheckIcon from '../../assets/icons/check.svg';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { addToWatchList } from '../../services/firebase';
+import { addToWatchList } from '../../services/firebase/firestore';
 
 interface MovieHeaderProps {
   movie: MovieDetailAndCreditResponse;

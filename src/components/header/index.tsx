@@ -1,5 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
 import GlobalSearch from '../../features/global-search';
+import LoginButton from '../button/loginButton';
 import { spacing } from '../../styles/tokens.stylex';
 
 const styles = stylex.create({
@@ -7,22 +8,17 @@ const styles = stylex.create({
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
+    alignItems: 'center',
     padding: `${spacing.lg}`,
-  },
-  searchWrapper: {
-    width: '100%',
-    maxWidth: '1200px',
-    display: 'flex',
-    justifyContent: 'center',
+    gap: spacing.lg,
   },
 });
 
 export default function Header() {
   return (
     <header {...stylex.props(styles.header)}>
-      <div {...stylex.props(styles.searchWrapper)}>
-        <GlobalSearch />
-      </div>
+      <GlobalSearch />
+      <LoginButton />
     </header>
   );
 }

@@ -7,8 +7,8 @@ import {
   setDoc,
   deleteField,
 } from 'firebase/firestore';
-import { db } from '../utils/firebaseInit';
-import type { User } from '../types/user';
+import { db } from '../../utils/firebaseInit';
+import type { User } from '../../types/user';
 
 export async function fetchWatchList(userId: string) {
   if (!userId) throw new Error('User ID is required');
@@ -70,5 +70,19 @@ export async function addToWatchList(userId: string, movieId: number) {
     [`watchList.${movieId}`]: {
       addedAt: serverTimestamp(),
     },
+  });
+}
+
+export async function createUser(userId: string): Promise<void> {
+  if (!userId) throw new Error('User ID is required');
+
+  const userRef = doc(collection(db, 'users'), userId);
+  const userDoc = await getDoc(userRef);
+
+  if (userDoc.exists()) return;
+
+  await setDoc(userRef, {
+    userId,
+    watchList: {},
   });
 }

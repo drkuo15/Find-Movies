@@ -1,5 +1,8 @@
 import useSWR from 'swr';
-import { fetchWatchList, removeFromWatchList } from '../services/firebase';
+import {
+  fetchWatchList,
+  removeFromWatchList,
+} from '../services/firebase/firestore';
 import { fetcher, getMovieDetailsKey } from '../services/tmdb';
 import type { MovieDetailResponse, WatchListMovie } from '../types/movie';
 
