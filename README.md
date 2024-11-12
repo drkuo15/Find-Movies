@@ -1,50 +1,42 @@
-# React + TypeScript + Vite
+# Find Movie - Movie Search Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Homepage](./src/assets/readme/homepage.png)
 
-Currently, two official plugins are available:
+A modern web application for searching and discovering movies using The Movie Database (TMDB) API. Built with React, TypeScript, and StyleX. [Visit Find Movie >>](https://find-movies-42d9e.web.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+## 🚀 Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Real-time movie search with debounced input
+- Infinite scroll pagination for smooth browsing
+- Optimized image loading with lazy loading
+- Mobile-first responsive design
+- Global search functionality across the application
+- Recommendation system based on user's watch list
+- Server-side data fetching with SWR for optimal performance
+- Comprehensive test coverage using Vitest
 
-- Configure the top-level `parserOptions` property like this:
+## 🛠️ Tech Stack
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### Frontend
+- **Framework**: React 
+- **Language**: TypeScript
+- **Styling**: StyleX for type-safe, performant styling
+- **Routing**: React Router DOM
+- **Data Fetching**: SWR for efficient data caching and revalidation
+- **State Management**: React Context + SWR
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Development & Testing
+- **Testing Framework**: Vitest with React Testing Library
+- **Linting**: ESLint
+- **Code Formatting**: Prettier
+- **Commit Linting**: Commitlint
+- **Git Hooks**: Husky for pre-commit checks
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Infrastructure
+- **CI/CD**: GitHub Actions for automated testing and deployment
+- **Hosting**: Firebase Hosting
+- **Database**: Firebase Firestore
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+
+
