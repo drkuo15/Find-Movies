@@ -3,6 +3,7 @@ import Layout from './components/layout';
 import Home from './pages/home';
 import Movie from './pages/movieDetails';
 import WatchList from './pages/watchList';
+import NotFound from './pages/notFound';
 import { Toaster } from 'sonner';
 import { AuthProvider } from './contexts/AuthProvider';
 
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/movie/:id" element={<Movie />} />
             <Route path="/watchlist" element={<WatchList />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster position="bottom-center" richColors />
         </Layout>

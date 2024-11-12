@@ -27,14 +27,12 @@ const styles = stylex.create({
     gap: {
       default: spacing.lg,
       '@media (max-width: 768px)': spacing.base,
-      '@media (max-width: 480px)': spacing.sm,
     },
     width: '100%',
   },
   movieCard: {
     borderRadius: radius.md,
     overflow: 'hidden',
-    backgroundColor: colors.white,
     boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
     transition: 'transform 0.2s ease-in-out',
     color: 'inherit',
@@ -49,6 +47,7 @@ const styles = stylex.create({
     aspectRatio: '2/3',
     objectFit: 'cover',
     backgroundColor: colors.gray200,
+    borderRadius: radius.md,
   },
   placeholderContainer: {
     width: '100%',
@@ -58,6 +57,7 @@ const styles = stylex.create({
     justifyContent: 'center',
     backgroundColor: colors.gray200,
     color: colors.gray400,
+    borderRadius: radius.md,
   },
   placeholderIcon: {
     width: '40%',
@@ -73,6 +73,7 @@ const styles = stylex.create({
       '@media (max-width: 768px)': fontSize.sm,
     },
     fontWeight: '600',
+    color: colors.white,
     marginBottom: spacing.xs,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -132,15 +133,21 @@ export default function Home() {
     return () => observer.disconnect();
   }, [isReachingEnd, isLoadingMore, isValidating, setSize]);
 
+  if (error)
+    return (
+      <Message variant="error">Error loading movies. Please try again.</Message>
+    );
+
+  if (isLoading) return <Message variant="loading">Loading movies...</Message>;
+
   return (
     <div {...stylex.props(styles.container)}>
-      {/* Error State */}
-      {error && (
-        <Message variant="error">
-          Error loading movies. Please try again.
+      {/* Welcome Message */}
+      {!searchQuery && (
+        <Message variant="info">
+          Welcome! Discover Your Next Favorite Movie!
         </Message>
       )}
-
       {/* Results */}
       {movies.length > 0 && (
         <div {...stylex.props(styles.movieGrid)}>
