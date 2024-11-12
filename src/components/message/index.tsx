@@ -1,5 +1,3 @@
-'use client';
-
 import * as stylex from '@stylexjs/stylex';
 import { colors, spacing, fontSize } from '../../styles/tokens.stylex';
 import { type ReactNode } from 'react';
