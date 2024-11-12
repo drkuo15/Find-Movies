@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "prepare": "husky",
     "commit": "git-cz",
-    "test": "vitest"
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "config": {
     "commitizen": {
@@ -33,11 +34,13 @@
     "@commitlint/config-conventional": "^19.5.0",
     "@eslint/js": "^9.13.0",
     "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
+    "@vitest/coverage-v8": "^2.1.4",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.13.0",

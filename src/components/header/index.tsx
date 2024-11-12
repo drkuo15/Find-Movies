@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
 import { Link } from 'react-router-dom';
-import GlobalSearch from '../../features/global-search';
+import GlobalSearch from '../../features/globalSearch';
 import LoginButton from '../button/loginButton';
 import { spacing } from '../../styles/tokens.stylex';
 import Logo from '../../../favicon.svg';
